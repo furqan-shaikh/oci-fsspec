@@ -58,11 +58,12 @@ async def ls(path):
     return await fs._ls(path=path)
 ```
 
-## Getting Started
-1. Clone the project
-2. Setup virtual environment
-3. Install the prerequisites
+# Installation
+## Install from source
+You can download the `oci-fsspec` library from Github and install locally:
 ```bash
+git clone https://github.com/furqan-shaikh/oci-fsspec.git
+cd oci-fsspec
 pip install .
 ```
 
