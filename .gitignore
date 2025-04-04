@@ -1,0 +1,7 @@
+dist/
+.idea/
+.DS_Store
+venv/
+oci_fsspec.egg-info/
+docs/examples/*.py
+__pycache__

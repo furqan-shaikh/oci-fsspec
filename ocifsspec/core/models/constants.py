@@ -1,0 +1,10 @@
+OCI_AUTHENTICATION_TYPE_KEY="authentication"
+PROTOCOL="oci"
+LIST_OBJECTS_PAGE_SIZE_KEY="limit"
+LIST_OBJECTS_PAGE_SIZE=100
+OCI_CONFIG_DEFAULT_PATH="~/.oci/config"
+CURRENT_REGION_KEY="current_region"
+DESTINATION_REGION_KEY="destination_region"
+OPC_WORK_REQUEST_ID_KEY='opc-work-request-id'
+OPC_REQUEST_ID_KEY='opc-request-id'
+DATE_KEY="date"

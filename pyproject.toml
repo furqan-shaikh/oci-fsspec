@@ -1,0 +1,37 @@
+## Specifies how package should be built
+[build-system]
+## Lists the dependencies needed for building package
+requires = ["setuptools", "setuptools-scm"]
+## Specifies the build backend i.e. the tool that handles the build process for the package
+## Determines how code is packaged into a distributable format like a .whl or .tar.gz
+## (e.g., setuptools, flit, poetry)
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oci-fsspec"
+authors = [
+    {name = "Furqan Shaikh", email = "furqan_shaikh_1999@hotmail.com"}
+]
+description = "Convenient filesystem interface over Oracle Cloud's Object Storage"
+version = "0.0.1"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.9"
+dependencies = [
+    "fsspec",
+    "oci"
+]
+keywords = [
+  "Oracle Cloud Infrastructure",
+  "OCI",
+  "Object Storage",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Universal Permissive License (UPL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]

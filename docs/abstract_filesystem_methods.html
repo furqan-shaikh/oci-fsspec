@@ -1,0 +1,427 @@
+
+<html>
+<head>
+    <title>AbstractFileSystem Methods</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h2>AbstractFileSystem Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Method Name</th>
+                <th>Signature</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>cat</td>
+            <td>(self, path, recursive=False, on_error='raise', **kwargs)</td>
+            <td>Fetch (potentially multiple) paths' contents</td>
+        </tr>
+    
+        <tr>
+            <td>cat_file</td>
+            <td>(self, path, start=None, end=None, **kwargs)</td>
+            <td>Get the content of a file</td>
+        </tr>
+    
+        <tr>
+            <td>cat_ranges</td>
+            <td>(self, paths, starts, ends, max_gap=None, on_error='return', **kwargs)</td>
+            <td>Get the contents of byte ranges from one or more files</td>
+        </tr>
+    
+        <tr>
+            <td>checksum</td>
+            <td>(self, path)</td>
+            <td>Unique value for current version of file</td>
+        </tr>
+    
+        <tr>
+            <td>copy</td>
+            <td>(self, path1, path2, recursive=False, maxdepth=None, on_error=None, **kwargs)</td>
+            <td>Copy within two locations in the filesystem</td>
+        </tr>
+    
+        <tr>
+            <td>cp</td>
+            <td>(self, path1, path2, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.copy`.</td>
+        </tr>
+    
+        <tr>
+            <td>cp_file</td>
+            <td>(self, path1, path2, **kwargs)</td>
+            <td>No description available</td>
+        </tr>
+    
+        <tr>
+            <td>created</td>
+            <td>(self, path)</td>
+            <td>Return the created timestamp of a file as a datetime.datetime</td>
+        </tr>
+    
+        <tr>
+            <td>delete</td>
+            <td>(self, path, recursive=False, maxdepth=None)</td>
+            <td>Alias of `AbstractFileSystem.rm`.</td>
+        </tr>
+    
+        <tr>
+            <td>disk_usage</td>
+            <td>(self, path, total=True, maxdepth=None, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.du`.</td>
+        </tr>
+    
+        <tr>
+            <td>download</td>
+            <td>(self, rpath, lpath, recursive=False, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.get`.</td>
+        </tr>
+    
+        <tr>
+            <td>du</td>
+            <td>(self, path, total=True, maxdepth=None, withdirs=False, **kwargs)</td>
+            <td>Space used by files and optionally directories within a path</td>
+        </tr>
+    
+        <tr>
+            <td>end_transaction</td>
+            <td>(self)</td>
+            <td>Finish write transaction, non-context version</td>
+        </tr>
+    
+        <tr>
+            <td>exists</td>
+            <td>(self, path, **kwargs)</td>
+            <td>Is there a file at the given path</td>
+        </tr>
+    
+        <tr>
+            <td>expand_path</td>
+            <td>(self, path, recursive=False, maxdepth=None, **kwargs)</td>
+            <td>Turn one or more globs or directories into a list of all matching paths</td>
+        </tr>
+    
+        <tr>
+            <td>find</td>
+            <td>(self, path, maxdepth=None, withdirs=False, detail=False, **kwargs)</td>
+            <td>List all files below path.</td>
+        </tr>
+    
+        <tr>
+            <td>from_dict</td>
+            <td>(dct: 'dict[str, Any]') -> 'AbstractFileSystem'</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>from_json</td>
+            <td>(blob: 'str') -> 'AbstractFileSystem'</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>get</td>
+            <td>(self, rpath, lpath, recursive=False, callback=<fsspec.callbacks.NoOpCallback object at 0x104e70d00>, maxdepth=None, **kwargs)</td>
+            <td>Copy file(s) to local.</td>
+        </tr>
+    
+        <tr>
+            <td>get_file</td>
+            <td>(self, rpath, lpath, callback=<fsspec.callbacks.NoOpCallback object at 0x104e70d00>, outfile=None, **kwargs)</td>
+            <td>Copy single remote file to local</td>
+        </tr>
+    
+        <tr>
+            <td>get_mapper</td>
+            <td>(self, root='', check=False, create=False, missing_exceptions=None)</td>
+            <td>Create key/value store based on this file-system</td>
+        </tr>
+    
+        <tr>
+            <td>glob</td>
+            <td>(self, path, maxdepth=None, **kwargs)</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>head</td>
+            <td>(self, path, size=1024)</td>
+            <td>Get the first ``size`` bytes from file</td>
+        </tr>
+    
+        <tr>
+            <td>info</td>
+            <td>(self, path, **kwargs)</td>
+            <td>Give details of entry at path</td>
+        </tr>
+    
+        <tr>
+            <td>invalidate_cache</td>
+            <td>(self, path=None)</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>isdir</td>
+            <td>(self, path)</td>
+            <td>Is this entry directory-like?</td>
+        </tr>
+    
+        <tr>
+            <td>isfile</td>
+            <td>(self, path)</td>
+            <td>Is this entry file-like?</td>
+        </tr>
+    
+        <tr>
+            <td>lexists</td>
+            <td>(self, path, **kwargs)</td>
+            <td>If there is a file at the given path (including</td>
+        </tr>
+    
+        <tr>
+            <td>listdir</td>
+            <td>(self, path, detail=True, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.ls`.</td>
+        </tr>
+    
+        <tr>
+            <td>ls</td>
+            <td>(self, path, detail=True, **kwargs)</td>
+            <td>List objects at path.</td>
+        </tr>
+    
+        <tr>
+            <td>makedir</td>
+            <td>(self, path, create_parents=True, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.mkdir`.</td>
+        </tr>
+    
+        <tr>
+            <td>makedirs</td>
+            <td>(self, path, exist_ok=False)</td>
+            <td>Recursively make directories</td>
+        </tr>
+    
+        <tr>
+            <td>mkdir</td>
+            <td>(self, path, create_parents=True, **kwargs)</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>mkdirs</td>
+            <td>(self, path, exist_ok=False)</td>
+            <td>Alias of `AbstractFileSystem.makedirs`.</td>
+        </tr>
+    
+        <tr>
+            <td>modified</td>
+            <td>(self, path)</td>
+            <td>Return the modified timestamp of a file as a datetime.datetime</td>
+        </tr>
+    
+        <tr>
+            <td>move</td>
+            <td>(self, path1, path2, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.mv`.</td>
+        </tr>
+    
+        <tr>
+            <td>mv</td>
+            <td>(self, path1, path2, recursive=False, maxdepth=None, **kwargs)</td>
+            <td>Move file(s) from one location to another</td>
+        </tr>
+    
+        <tr>
+            <td>open</td>
+            <td>(self, path, mode='rb', block_size=None, cache_options=None, compression=None, **kwargs)</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>pipe</td>
+            <td>(self, path, value=None, **kwargs)</td>
+            <td>Put value into path</td>
+        </tr>
+    
+        <tr>
+            <td>pipe_file</td>
+            <td>(self, path, value, mode='overwrite', **kwargs)</td>
+            <td>Set the bytes of given file</td>
+        </tr>
+    
+        <tr>
+            <td>put</td>
+            <td>(self, lpath, rpath, recursive=False, callback=<fsspec.callbacks.NoOpCallback object at 0x104e70d00>, maxdepth=None, **kwargs)</td>
+            <td>Copy file(s) from local.</td>
+        </tr>
+    
+        <tr>
+            <td>put_file</td>
+            <td>(self, lpath, rpath, callback=<fsspec.callbacks.NoOpCallback object at 0x104e70d00>, mode='overwrite', **kwargs)</td>
+            <td>Copy single file to remote</td>
+        </tr>
+    
+        <tr>
+            <td>read_block</td>
+            <td>(self, fn, offset, length, delimiter=None)</td>
+            <td>Read a block of bytes from</td>
+        </tr>
+    
+        <tr>
+            <td>read_bytes</td>
+            <td>(self, path, start=None, end=None, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.cat_file`.</td>
+        </tr>
+    
+        <tr>
+            <td>read_text</td>
+            <td>(self, path, encoding=None, errors=None, newline=None, **kwargs)</td>
+            <td>Get the contents of the file as a string.</td>
+        </tr>
+    
+        <tr>
+            <td>rename</td>
+            <td>(self, path1, path2, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.mv`.</td>
+        </tr>
+    
+        <tr>
+            <td>rm</td>
+            <td>(self, path, recursive=False, maxdepth=None)</td>
+            <td>Delete files.</td>
+        </tr>
+    
+        <tr>
+            <td>rm_file</td>
+            <td>(self, path)</td>
+            <td>Delete a file</td>
+        </tr>
+    
+        <tr>
+            <td>rmdir</td>
+            <td>(self, path)</td>
+            <td>Remove a directory, if empty</td>
+        </tr>
+    
+        <tr>
+            <td>sign</td>
+            <td>(self, path, expiration=100, **kwargs)</td>
+            <td>Create a signed URL representing the given path</td>
+        </tr>
+    
+        <tr>
+            <td>size</td>
+            <td>(self, path)</td>
+            <td>Size in bytes of file</td>
+        </tr>
+    
+        <tr>
+            <td>sizes</td>
+            <td>(self, paths)</td>
+            <td>Size in bytes of each file in a list of paths</td>
+        </tr>
+    
+        <tr>
+            <td>start_transaction</td>
+            <td>(self)</td>
+            <td>Begin write transaction for deferring files, non-context version</td>
+        </tr>
+    
+        <tr>
+            <td>stat</td>
+            <td>(self, path, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.info`.</td>
+        </tr>
+    
+        <tr>
+            <td>tail</td>
+            <td>(self, path, size=1024)</td>
+            <td>Get the last ``size`` bytes from file</td>
+        </tr>
+    
+        <tr>
+            <td>to_dict</td>
+            <td>(self, *, include_password: 'bool' = True) -> 'dict[str, Any]'</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>to_json</td>
+            <td>(self, *, include_password: 'bool' = True) -> 'str'</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>touch</td>
+            <td>(self, path, truncate=True, **kwargs)</td>
+            <td>Create empty file, or update timestamp</td>
+        </tr>
+    
+        <tr>
+            <td>tree</td>
+            <td>(self, path: 'str' = '/', recursion_limit: 'int' = 2, max_display: 'int' = 25, display_size: 'bool' = False, prefix: 'str' = '', is_last: 'bool' = True, first: 'bool' = True, indent_size: 'int' = 4) -> 'str'</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>ukey</td>
+            <td>(self, path)</td>
+            <td>Hash of file properties, to tell if it has changed</td>
+        </tr>
+    
+        <tr>
+            <td>unstrip_protocol</td>
+            <td>(self, name: 'str') -> 'str'</td>
+            <td>Format FS-specific path to generic, including protocol</td>
+        </tr>
+    
+        <tr>
+            <td>upload</td>
+            <td>(self, lpath, rpath, recursive=False, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.put`.</td>
+        </tr>
+    
+        <tr>
+            <td>walk</td>
+            <td>(self, path, maxdepth=None, topdown=True, on_error='omit', **kwargs)</td>
+            <td>Return all files under the given path.</td>
+        </tr>
+    
+        <tr>
+            <td>write_bytes</td>
+            <td>(self, path, value, **kwargs)</td>
+            <td>Alias of `AbstractFileSystem.pipe_file`.</td>
+        </tr>
+    
+        <tr>
+            <td>write_text</td>
+            <td>(self, path, value, encoding=None, errors=None, newline=None, **kwargs)</td>
+            <td>Write the text to the given file.</td>
+        </tr>
+    
+        </tbody>
+    </table>
+</body>
+</html>
