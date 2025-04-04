@@ -1,13 +1,14 @@
 import oci
-
+from oci.config import from_file
 from ocifsspec.core.auth.session_token_authentication import SessionTokenAuthentication
+from ocifsspec.core.auth.user_token_authentication import UserTokenAuthentication
 from ocifsspec.core.exceptions.oci_authentication_error import OCIAuthenticationError
 
 
 def get_object_storage_client(authentication):
     if isinstance(authentication, SessionTokenAuthentication):
         # read profile from oci config file
-        config = oci.config.from_file(file_location=authentication.config_path,
+        config = from_file(file_location=authentication.config_path,
                                       profile_name=authentication.profile_name)
         token_file = config['security_token_file']
         token = None
@@ -16,6 +17,10 @@ def get_object_storage_client(authentication):
         private_key = oci.signer.load_private_key_from_file(config['key_file'])
         signer = oci.auth.signers.SecurityTokenSigner(token, private_key)
         return oci.object_storage.ObjectStorageClient(config=config, signer=signer)
+    if isinstance(authentication, UserTokenAuthentication):
+        config = from_file(file_location=authentication.config_path,
+                           profile_name=authentication.profile_name)
+        return oci.object_storage.ObjectStorageClient(config)
     else:
         raise OCIAuthenticationError("Invalid authentication type")
 
