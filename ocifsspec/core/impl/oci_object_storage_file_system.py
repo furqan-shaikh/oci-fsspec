@@ -164,7 +164,6 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
         :param kwargs:
         :return:
         """
-        print(path)
         object_storage_name = self._parse_path_2(path)
         dir_response = {"name": path, "size": 0, "type": "directory"}
         if object_storage_name.object_name:
@@ -189,9 +188,6 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
                 raise e
         return dir_response
 
-
-        return self.ls(path=path, detail=True)
-
     def cat_file(self, path, start=None, end=None, **kwargs) -> bytes:
         """
         Get the content of a file
@@ -215,6 +211,9 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
 
         # Get the content from response in bytes
         return get_object_response.data.content
+
+    def cat(self, path, recursive=False, on_error="raise", **kwargs):
+        return super().cat(path=path, recursive=recursive,on_error=on_error,**kwargs)
 
     def checksum(self, path: str):
         """

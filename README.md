@@ -23,6 +23,8 @@ with fs.open("oci://<bucket>@<namespace>/<prefix>/file.txt") as f:
         print(f.read())
 # 5.Find files by glob-matching
 fs.glob("oci://<bucket>@<namespace>/<prefix>/*.txt")
+# 6.Fetch(potentially multiple paths' contents
+fs.cat("oci://<bucket>@<namespace>/<prefix>/file.txt")
 ```
 
 # Integration
