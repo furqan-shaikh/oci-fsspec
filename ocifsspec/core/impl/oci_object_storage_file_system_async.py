@@ -58,6 +58,18 @@ class OCIObjectStorageFileSystemAsync(AsyncFileSystem):
     async def _cat_file(self, path, start=None, end=None, **kwargs):
         return await self._to_async_wrapper(self.fs.cat_file, path, start, end, **kwargs)
 
+    async def _touch(self, path, truncate=True, **kwargs):
+        """Create empty file
+
+        Parameters
+        ----------
+        path: str
+            file location
+        truncate: bool
+             If True, always set file size to 0; if False, raise ValueError as OCI Object Storage doesn't support touching existing files
+        """
+        return await self._to_async_wrapper(self.fs.touch, path, truncate, **kwargs)
+
 
 
 

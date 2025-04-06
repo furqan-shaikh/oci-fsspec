@@ -215,6 +215,27 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
     def cat(self, path, recursive=False, on_error="raise", **kwargs):
         return super().cat(path=path, recursive=recursive,on_error=on_error,**kwargs)
 
+    def touch(self, path, truncate=True, **kwargs):
+        """Create empty file
+
+        Parameters
+        ----------
+        path: str
+            file location
+        truncate: bool
+            If True, always set file size to 0; if False, raise ValueError as OCI Object Storage doesn't support touching existing files
+        """
+        try:
+            object_storage_name = self._parse_path_2(path=path)
+            if not object_storage_name.object_name:
+                raise ValueError(
+                f"The path {path} seems to be a new bucket. We do not support creating "
+                "buckets with touch"
+            )
+            super().touch(path=path, truncate=truncate, **kwargs)
+        except NotImplementedError:
+            raise ValueError("OCI Object Storage does not support touching existent files")
+
     def checksum(self, path: str):
         """
         Unique value for current version of file.

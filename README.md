@@ -25,6 +25,8 @@ with fs.open("oci://<bucket>@<namespace>/<prefix>/file.txt") as f:
 fs.glob("oci://<bucket>@<namespace>/<prefix>/*.txt")
 # 6.Fetch(potentially multiple paths' contents
 fs.cat("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 7.Create empty file or truncate in OCI object storage bucket
+fs.touch("oci://<bucket>@<namespace>/<refix>/file.txt", truncate=True)
 ```
 
 # Integration
