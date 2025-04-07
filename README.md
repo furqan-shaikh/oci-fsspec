@@ -37,6 +37,8 @@ fs.created(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
 fs.modified(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
 # 12. Get the space used by files and optionally directories within a path
 fs.du(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 13.Get the contents of byte ranges from one or more files
+fs.cat_ranges(["oci://<bucket>@<namespace>/<prefix>/file.txt"], starts=[None, None, None],ends=[None, None, None], on_error="return")
 ```
 
 # Integration
