@@ -27,6 +27,16 @@ fs.glob("oci://<bucket>@<namespace>/<prefix>/*.txt")
 fs.cat("oci://<bucket>@<namespace>/<prefix>/file.txt")
 # 7.Create empty file or truncate in OCI object storage bucket
 fs.touch("oci://<bucket>@<namespace>/<refix>/file.txt", truncate=True)
+# 8.Get the size in bytes of a file
+fs.size("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 9.Get the Size in bytes of each file in a list of paths
+fs.sizes(["oci://<bucket>@<namespace>/<prefix>/file.txt", "oci://<bucket>@<namespace>/<prefix>/file_2.txt"])
+# 10. Get the created timestamp of a file as a datetime.datetime
+fs.created(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 11. Get the modified timestamp of a file as a datetime.datetime
+fs.modified(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 12. Get the space used by files and optionally directories within a path
+fs.du(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
 ```
 
 # Integration

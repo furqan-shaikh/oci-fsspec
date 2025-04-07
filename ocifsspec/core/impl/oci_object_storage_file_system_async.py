@@ -70,6 +70,14 @@ class OCIObjectStorageFileSystemAsync(AsyncFileSystem):
         """
         return await self._to_async_wrapper(self.fs.touch, path, truncate, **kwargs)
 
+    async def _created(self, path, **kwargs):
+        """Return the created timestamp of a file as a datetime.datetime"""
+        return await self._to_async_wrapper(self.fs.created, path, **kwargs)
+
+    async def _modified(self, path, **kwargs):
+        """Return the modified timestamp of a file as a datetime.datetime"""
+        return await self._to_async_wrapper(self.fs.modified, path, **kwargs)
+
 
 
 

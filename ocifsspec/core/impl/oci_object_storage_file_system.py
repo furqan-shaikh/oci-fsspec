@@ -252,6 +252,21 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
         # convert hexadecimal value to integer value
         return int(hash_value, 16)
 
+    def created(self, path):
+        """Return the created timestamp of a file as a datetime.datetime"""
+        return self._get_time(path=path, key="timeCreated")
+
+    def modified(self, path):
+        """Return the modified timestamp of a file as a datetime.datetime"""
+        return self._get_time(path=path, key="lastModified")
+
+    def _get_time(self, path, key):
+        response = self.info(path=path)
+        time = None
+        if response["type"] == "file":
+            time = response[key]
+        return time
+
     def copy(self,path1, path2, recursive=False, maxdepth=None, on_error=None, **kwargs) -> CopyResponse:
         source_object_storage_name = self._parse_path_2(path1)
         destination_object_storage_name = self._parse_path_2(path2)
@@ -370,7 +385,7 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
             namespace_name=object_storage_name.namespace,
             bucket_name=object_storage_name.bucket,
             prefix=object_storage_name.object_name,
-            fields="name,size,etag,md5",
+            fields="name,size,etag,md5,timeCreated, timeModified",
             limit=limit)
 
         if list_objects_response.data.next_start_with is None:
@@ -395,6 +410,8 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
                          'size': item.size,
                          'etag': item.etag,
                          'md5': item.md5,
+                         'time_created': item.time_created,
+                         'time_modified': item.time_modified,
                          'type': 'file'
                          } for item in list_objects_response.objects]
         return response
