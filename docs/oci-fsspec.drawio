@@ -16,7 +16,7 @@
           <mxGeometry x="-130" y="380" width="140" height="40" as="geometry" />
         </mxCell>
         <mxCell id="1_Kzm3Vt9yrE1pa4qoEe-2" value="" style="sketch=0;html=1;aspect=fixed;strokeColor=none;shadow=0;fillColor=#3B8DF1;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;shape=mxgraph.gcp2.folders" parent="1" vertex="1">
-          <mxGeometry x="660" y="185.5" width="70" height="59.5" as="geometry" />
+          <mxGeometry x="660" y="185.5" width="64.12" height="54.5" as="geometry" />
         </mxCell>
         <mxCell id="1_Kzm3Vt9yrE1pa4qoEe-3" value="Local filesystem" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="730" y="200" width="90" height="30" as="geometry" />

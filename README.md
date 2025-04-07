@@ -74,6 +74,9 @@ pip install .
 ## Software Prerequisites
 Python >= 3.9
 
+## Design
+For technical details, please refer [here](./docs/README.md)
+
 
 
 
