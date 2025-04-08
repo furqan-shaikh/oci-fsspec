@@ -8,7 +8,7 @@ from ocifsspec.core.models.constants import OCI_AUTHENTICATION_TYPE_KEY, PROTOCO
     DATE_KEY
 from ocifsspec.core.models.copy_response import CopyResponse
 from ocifsspec.core.oci_object_storage.object_storage_client import get_object_storage_client, \
-    get_create_multipart_upload_details
+    get_create_multipart_upload_details, get_create_bucket_details
 
 from fsspec.spec import AbstractBufferedFile
 
@@ -350,6 +350,38 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
         except Exception as e:
             print(f"Failed to delete file: {path}")
             raise e
+
+    def mkdir(self, path:str, create_parents:bool=True, compartment_id: str = None, **kwargs):
+        """
+        Create bucket if it doesn't exist
+
+        Parameters
+        ----------
+        path: str
+            location
+        create_parents: bool
+            if True, this is equivalent to ``makedirs``
+        compartment_id : str
+            compartment in which to create the bucket
+        kwargs : dict
+            additional args for OCI
+        """
+        object_storage_name = self._parse_path_2(path=path)
+
+        # create a bucket if create_parents is True or path has no prefix provided
+        if create_parents or not object_storage_name.object_name:
+            # create the bucket
+            try:
+                create_bucket_details = get_create_bucket_details(object_storage_name, compartment_id, **kwargs)
+                self.object_storage_client.create_bucket(namespace_name=object_storage_name.namespace,
+                                                         create_bucket_details=create_bucket_details
+                                                         )
+            except ServiceError as e:
+                if e.code == "MissingCompartmentId":
+                    raise e
+                if e.code == "BucketAlreadyExists":
+                    raise FileExistsError
+                print(f"Bucket {object_storage_name.bucket} already exists")
 
     def _parse_path_2(self, path: str) -> ObjectStorageName:
         # oci://bucket@namespace/path/to/file

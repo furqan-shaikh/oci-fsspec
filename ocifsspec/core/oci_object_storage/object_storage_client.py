@@ -3,6 +3,7 @@ from oci.config import from_file
 from ocifsspec.core.auth.session_token_authentication import SessionTokenAuthentication
 from ocifsspec.core.auth.user_token_authentication import UserTokenAuthentication
 from ocifsspec.core.exceptions.oci_authentication_error import OCIAuthenticationError
+from ocifsspec.core.models.object_storage_name import ObjectStorageName
 
 
 def get_object_storage_client(authentication):
@@ -35,4 +36,11 @@ def get_work_request(object_storage_client, work_request_id: str):
 def get_create_multipart_upload_details(object_name: str):
     return oci.object_storage.models.CreateMultipartUploadDetails(
         object=object_name
+    )
+
+def get_create_bucket_details(object_storage_name: ObjectStorageName, compartment_id: str, **kwargs):
+    return oci.object_storage.models.CreateBucketDetails(
+        name=object_storage_name.bucket,
+        compartment_id=compartment_id,
+        **kwargs
     )

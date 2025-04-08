@@ -78,6 +78,9 @@ class OCIObjectStorageFileSystemAsync(AsyncFileSystem):
         """Return the modified timestamp of a file as a datetime.datetime"""
         return await self._to_async_wrapper(self.fs.modified, path, **kwargs)
 
+    async def _mkdir(self, path:str, create_parents:bool=True, compartment_id: str = None, **kwargs):
+        return await self._to_async_wrapper(self.fs.mkdir, path, create_parents, compartment_id, **kwargs)
+
 
 
 

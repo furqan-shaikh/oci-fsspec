@@ -61,6 +61,8 @@ fs.read_bytes("oci://<bucket>@<namespace>/<prefix>/file.txt", start=0, end=100)
 fs.read_text("oci://<bucket>@<namespace>/<prefix>/file.txt", encoding=None, errors=None, newline=None)
 # 24.Delete a file from the bucket
 fs.rm("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 25.Create bucket if it doesn't exist
+fs.mkdir("oci://<bucket>@<namespace>", create_parents=True, compartment_id="<compartment id>")
 ```
 
 # Integration
