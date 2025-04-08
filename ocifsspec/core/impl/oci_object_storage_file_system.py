@@ -8,7 +8,7 @@ from ocifsspec.core.models.constants import OCI_AUTHENTICATION_TYPE_KEY, PROTOCO
     DATE_KEY
 from ocifsspec.core.models.copy_response import CopyResponse
 from ocifsspec.core.oci_object_storage.object_storage_client import get_object_storage_client, \
-    get_create_multipart_upload_details, get_create_bucket_details
+    get_create_multipart_upload_details, get_create_bucket_details, get_create_preauthenticated_request_details
 
 from fsspec.spec import AbstractBufferedFile
 
@@ -382,6 +382,63 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
                 if e.code == "BucketAlreadyExists":
                     raise FileExistsError
                 print(f"Bucket {object_storage_name.bucket} already exists")
+
+    def sign(self, path: str, expiration: int=100 ,**kwargs):
+        """Create a signed URL representing the given path
+
+        Parameters
+        ----------
+        path : str
+             The path on the filesystem
+        expiration : int
+            Number of seconds to enable the URL for (if supported)
+        kwargs:
+            name: str
+                A user-specified name for the pre-authenticated request.
+                Names can be helpful in managing pre-authenticated requests. Avoid entering confidential information.
+            object_operation : str
+                The operation that can be performed on this resource.
+                Allowed values for this property are: “ObjectRead”, “ObjectWrite”, “ObjectReadWrite”, “AnyObjectWrite”, “AnyObjectRead”, “AnyObjectReadWrite”
+
+        Returns
+        -------
+        Object : Dict
+            {
+                  "access_type": "",
+                  "access_uri": "",
+                  "bucket_listing_action": null,
+                  "full_path": "",
+                  "id": "",
+                  "name": "",
+                  "object_name": "",
+                  "time_created": "2025-04-08T12:35:29.912000+00:00",
+                  "time_expires": "2025-04-08T12:35:38+00:00"
+            }
+
+        """
+        allowed_object_operations=["ObjectRead", "ObjectWrite", "ObjectReadWrite", "AnyObjectWrite", "AnyObjectRead", "AnyObjectReadWrite"]
+        object_operation = kwargs.get("object_operation", allowed_object_operations[0])
+        name = kwargs.get("name", "")
+        if not name:
+            raise ValueError(f"Name cannot be empty: {name}")
+        object_storage_name = self._parse_path_2(path=path)
+        if not object_storage_name.object_name:
+            raise ValueError(f"Invalid path: {path}")
+        try:
+            create_preauthenticated_request_details = get_create_preauthenticated_request_details(name=name,
+                                                                                                  object_name=object_storage_name.object_name,
+                                                                                                  access_type=object_operation,
+                                                                                                  expires_in=expiration)
+            create_preauthenticated_request_response = self.object_storage_client.create_preauthenticated_request(
+                namespace_name=object_storage_name.namespace,
+                bucket_name=object_storage_name.bucket,
+                create_preauthenticated_request_details=create_preauthenticated_request_details)
+
+            # Get the data from response
+            return create_preauthenticated_request_response.data
+        except Exception as e:
+            print(f"Failed to create PAR for : {path}, {e}")
+            raise
 
     def _parse_path_2(self, path: str) -> ObjectStorageName:
         # oci://bucket@namespace/path/to/file

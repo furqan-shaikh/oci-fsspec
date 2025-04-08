@@ -63,6 +63,8 @@ fs.read_text("oci://<bucket>@<namespace>/<prefix>/file.txt", encoding=None, erro
 fs.rm("oci://<bucket>@<namespace>/<prefix>/file.txt")
 # 25.Create bucket if it doesn't exist
 fs.mkdir("oci://<bucket>@<namespace>", create_parents=True, compartment_id="<compartment id>")
+# 26.Create bucket if it doesn't exist
+fs.sign("oci://<bucket>@<namespace>/prefix/file.txt",expires_in=10, name="par_pdf", object_operation="ObjectRead")
 ```
 
 # Integration

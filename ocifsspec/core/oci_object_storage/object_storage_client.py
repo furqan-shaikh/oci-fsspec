@@ -1,3 +1,5 @@
+import datetime
+
 import oci
 from oci.config import from_file
 from ocifsspec.core.auth.session_token_authentication import SessionTokenAuthentication
@@ -44,3 +46,23 @@ def get_create_bucket_details(object_storage_name: ObjectStorageName, compartmen
         compartment_id=compartment_id,
         **kwargs
     )
+
+def get_create_preauthenticated_request_details(name: str, object_name: str, access_type: str, expires_in: int):
+    return oci.object_storage.models.CreatePreauthenticatedRequestDetails(
+        name=name,
+        access_type=access_type,
+        object_name=object_name,
+        time_expires=_get_rfc3339_time(expires_in))
+
+def _get_rfc3339_time(expires_in: int):
+    """
+    Gets the time_expires of this CreatePreauthenticatedRequestDetails.
+    The expiration date for the pre-authenticated request as per RFC 3339.
+    :param expires_in: time in seconds
+    :return: str in RFC 3339 format
+    """
+    # Get current UTC time.
+    # Add expires seconds to it.
+    # Format it as an RFC3339 string (YYYY-MM-DDTHH:MM:SSZ).
+    expiry_time = datetime.datetime.utcnow() + datetime.timedelta(seconds=expires_in)
+    return expiry_time.replace(microsecond=0).isoformat() + "Z"

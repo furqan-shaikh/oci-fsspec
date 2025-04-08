@@ -81,6 +81,41 @@ class OCIObjectStorageFileSystemAsync(AsyncFileSystem):
     async def _mkdir(self, path:str, create_parents:bool=True, compartment_id: str = None, **kwargs):
         return await self._to_async_wrapper(self.fs.mkdir, path, create_parents, compartment_id, **kwargs)
 
+    async def _sign(self, path: str, expiration: int=100 ,**kwargs):
+        """Create a signed URL representing the given path
+
+                Parameters
+                ----------
+                path : str
+                     The path on the filesystem
+                expiration : int
+                    Number of seconds to enable the URL for (if supported)
+                kwargs:
+                    name: str
+                        A user-specified name for the pre-authenticated request.
+                        Names can be helpful in managing pre-authenticated requests. Avoid entering confidential information.
+                    object_operation : str
+                        The operation that can be performed on this resource.
+                        Allowed values for this property are: “ObjectRead”, “ObjectWrite”, “ObjectReadWrite”, “AnyObjectWrite”, “AnyObjectRead”, “AnyObjectReadWrite”
+
+                Returns
+                -------
+                Object : Dict
+                    {
+                          "access_type": "",
+                          "access_uri": "",
+                          "bucket_listing_action": null,
+                          "full_path": "",
+                          "id": "",
+                          "name": "",
+                          "object_name": "",
+                          "time_created": "2025-04-08T12:35:29.912000+00:00",
+                          "time_expires": "2025-04-08T12:35:38+00:00"
+                    }
+
+                """
+        return await self._to_async_wrapper(self.fs.sign, path, expiration, **kwargs)
+
 
 
 
