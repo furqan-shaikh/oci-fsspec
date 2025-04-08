@@ -39,6 +39,28 @@ fs.modified(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
 fs.du(path="oci://<bucket>@<namespace>/<prefix>/file.txt")
 # 13.Get the contents of byte ranges from one or more files
 fs.cat_ranges(["oci://<bucket>@<namespace>/<prefix>/file.txt"], starts=[None, None, None],ends=[None, None, None], on_error="return")
+# 14. Copy within two locations in the filesystem
+fs.cp(path1="oci://<bucket>@<namespace>/<prefix>/file.txt", path2="oci://<bucket>@<namespace>/<prefix>/file.txt", destination_region="<region>")
+# 15 .Hash of file properties, to tell if it has changed
+fs.ukey("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 16.Is this entry directory-like?
+fs.isdir("oci://<bucket>@<namespace>")
+# 17.Is this entry file-like?
+fs.isfile("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 18.If there is a file at the given path (including broken links)
+fs.lexists("oci://<bucket>@<namespace>/<prefix>/file.txt")
+# 19.Get directory listing with details
+fs.listdir("oci://<bucket>@<namespace>/<prefix>/", detail=True)
+# 20.Get the first ``size`` bytes from file
+fs.head("oci://<bucket>@<namespace>/<prefix>/file.txt", size=1024)
+# 21.Get the last ``size`` bytes from file
+fs.tail("oci://<bucket>@<namespace>/<prefix>/file.txt", size=1024)
+# 22.Get the contents of the file as a byte
+fs.read_bytes("oci://<bucket>@<namespace>/<prefix>/file.txt", start=0, end=100)
+# 23.Get the contents of the file as a string
+fs.read_text("oci://<bucket>@<namespace>/<prefix>/file.txt", encoding=None, errors=None, newline=None)
+# 24.Delete a file from the bucket
+fs.rm("oci://<bucket>@<namespace>/<prefix>/file.txt")
 ```
 
 # Integration

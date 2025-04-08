@@ -165,28 +165,12 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
         :return:
         """
         object_storage_name = self._parse_path_2(path)
-        dir_response = {"name": path, "size": 0, "type": "directory"}
         if object_storage_name.object_name:
             try:
-                head_object_response = self.object_storage_client.head_object(namespace_name=object_storage_name.namespace,
-                                                                              bucket_name=object_storage_name.bucket,
-                                                                              object_name=object_storage_name.object_name,
-                                                                              **kwargs).headers
-                return {
-                    "name": path,
-                    "type": "file",
-                    "size": int(head_object_response["Content-Length"]),
-                    "etag": head_object_response.get("etag"),
-                    "timeCreated": head_object_response.get("date"),
-                    "lastModified": head_object_response.get("last-modified"),
-                    "contentMd5": head_object_response.get("content-md5"),
-                    "storageTier": head_object_response.get("storage-tier"),
-                    "versionId": head_object_response.get("version-id"),
-                    "contentType": head_object_response.get("Content-Type"),
-                }
+                return self._head_object(path=path, object_storage_name=object_storage_name,**kwargs)
             except Exception as e:
                 raise e
-        return dir_response
+        return self._get_directory_object(path=path)
 
     def cat_file(self, path, start=None, end=None, **kwargs) -> bytes:
         """
@@ -332,6 +316,41 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
 
         return super().open(path=urlpath, mode=mode, compression=compression, encoding=encoding)
 
+    def rm(self, path, recursive=False, maxdepth=None):
+        """Delete files.
+
+        Parameters
+        ----------
+        path: str or list of str
+            File(s) to delete.
+        recursive: bool
+            If file(s) are directories, recursively delete contents and then
+            also remove the directory
+        maxdepth: int or None
+            Depth to pass to walk for finding files to delete, if recursive.
+            If None, there will be no limit and infinite recursion may be
+            possible.
+        """
+        object_storage_name = self._parse_path_2(path=path)
+        if not object_storage_name.object_name:
+            raise ValueError("Cannot delete the bucket")
+        super().rm(path, recursive, maxdepth)
+
+    def rm_file(self, path):
+        """Delete a file"""
+        object_storage_name = self._parse_path_2(path=path)
+        if not object_storage_name.object_name:
+            raise ValueError("Cannot delete the bucket")
+        try:
+            delete_object_response = self.object_storage_client.delete_object(
+                namespace_name=object_storage_name.namespace,
+                bucket_name=object_storage_name.bucket,
+                object_name=object_storage_name.object_name)
+            return delete_object_response.headers
+        except Exception as e:
+            print(f"Failed to delete file: {path}")
+            raise e
+
     def _parse_path_2(self, path: str) -> ObjectStorageName:
         # oci://bucket@namespace/path/to/file
 
@@ -380,11 +399,43 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
     def _get_file_name(self, object_storage_name: ObjectStorageName, name: str) -> str:
         return f"{object_storage_name.bucket}@{object_storage_name.namespace}/{name}"
 
+    def _head_object(self, path:str, object_storage_name: ObjectStorageName, **kwargs):
+        try:
+            head_object_response = self.object_storage_client.head_object(namespace_name=object_storage_name.namespace,
+                                                                          bucket_name=object_storage_name.bucket,
+                                                                          object_name=object_storage_name.object_name,
+                                                                          **kwargs).headers
+            return {
+                "name": path,
+                "type": "file",
+                "size": int(head_object_response["Content-Length"]),
+                "etag": head_object_response.get("etag"),
+                "timeCreated": head_object_response.get("date"),
+                "lastModified": head_object_response.get("last-modified"),
+                "contentMd5": head_object_response.get("content-md5"),
+                "storageTier": head_object_response.get("storage-tier"),
+                "versionId": head_object_response.get("version-id"),
+                "contentType": head_object_response.get("Content-Type"),
+            }
+        except ServiceError as e:
+            if e.status == 404:
+                try:
+                    if self.object_storage_client.list_objects(namespace_name=object_storage_name.namespace,
+                                                               bucket_name=object_storage_name.bucket,
+                                                               prefix=object_storage_name.object_name.rstrip("/") + "/",
+                                                               limit=1,
+                                                               ).data.objects:
+                        return self._get_directory_object(path=path)
+                except Exception as e:
+                    raise e
+
     def _get_page_data(self, object_storage_name: ObjectStorageName, detail: bool, limit: int):
+        prefix = object_storage_name.object_name + "/" if object_storage_name.object_name else ""
         list_objects_response = self.object_storage_client.list_objects(
             namespace_name=object_storage_name.namespace,
             bucket_name=object_storage_name.bucket,
-            prefix=object_storage_name.object_name,
+            prefix=prefix,
+            delimiter="/",
             fields="name,size,etag,md5,timeCreated, timeModified",
             limit=limit)
 
@@ -395,6 +446,10 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
         response = self._generate_results(list_objects_response=list_objects_response.data,
                                object_storage_name=object_storage_name,
                                detail=detail)
+
+        if list_objects_response.data.prefixes:
+            for i in range(len(list_objects_response.data.prefixes)):
+                response.append(self._get_directory_object(path=self._get_file_name(object_storage_name,list_objects_response.data.prefixes[i])))
 
         return response, has_more_page
 
@@ -415,6 +470,9 @@ class OCIObjectStorageFileSystem(AbstractFileSystem):
                          'type': 'file'
                          } for item in list_objects_response.objects]
         return response
+
+    def _get_directory_object(self, path: str):
+        return {"name": path, "size": 0, "type": "directory"}
 
     def get_bytes_range(self, start, end):
         # if either start or end is provided, generate the range parameter
